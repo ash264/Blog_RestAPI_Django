@@ -1,0 +1,125 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		{% block head_title%}Blog Website{% endblock head_title%}
+	</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style >{% block style %}{% endblock style %}</style>
+{% block head_extra %}{% endblock head_extra %}
+
+</head>
+<body>
+
+{% include 'messages_display.html' %}
+<div clas="container">
+	<ol class="breadcrumb">
+		<li><a href="{% url 'posts:list' %}">Home</a></li>
+		
+		{% block post_detail_link %}
+		{% endblock %}
+
+		{% if not request.user.is_authenticated %}
+		<li class="pull-right"><a href="{% url 'register' %}">Register</a></li>
+		<li class="pull-right"><a href="{% url 'login' %}">Login</a></li>
+		{% else %}
+		<li class="pull-right"><a href="{% url 'logout' %}">Logout</a></li>
+		{% endif %}	
+	</ol> 
+
+
+{% block content %}
+
+{% endblock content %}	
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="  crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$(".content-markdown").each(function(){
+
+		var content = $(this).text()
+		// console.log(content)
+		var markedContent = marked(content)
+		// console.log(markedContent)	
+		$(this).html(markedContent)
+
+	})
+	$(".post-detail-item img").each(function(){
+		$(this).addClass("img-responsive")
+	})
+
+
+	var contentInput = $("#id_content");
+
+	function setContent(value){
+		var markedContent = marked(value)
+		$("#preview-content").html(markedContent)
+		$("#preview-content img").each(function(){
+			$(this).addClass("img-responsive")
+		})
+	}
+	setContent(contentInput.val())
+
+	contentInput.keyup(function(){
+		var newContent = $(this).val()
+		setContent(newContent)
+	})
+
+	var titleInput = $("#id_title");
+
+	function setTitle(value){
+		$('#preview-title').text(value)
+	}
+	setTitle(titleInput.val())
+
+	titleInput.keyup(function(){
+		var newContent = $(this).val()
+		setTitle(newContent)
+	})
+
+	$('.comment-reply-btn').click(function(event){
+		event.preventDefault();
+		$(this).parent().next(".comment-reply").fadeToggle();
+	})
+
+})	
+
+</script>
+</body>
+</html>
